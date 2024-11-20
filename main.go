@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"plainrandom/config"
 	"plainrandom/server"
 )
 
@@ -19,10 +20,11 @@ func main() {
 	go func() { <-c; cancel() }()
 
 	// Execute program.
-	log.Printf("Starting Nubayrah Application")
+	log.Printf("Starting Application...")
 	//
 	// Creates a new Main object
-	s := server.NewServer()
+	conf := config.NewConfig()
+	s := server.NewServer(conf)
 	//
 	// Starts the API server
 	s.Start()

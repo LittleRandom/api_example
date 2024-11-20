@@ -2,8 +2,10 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"plainrandom/config"
 	"plainrandom/models"
 	"plainrandom/sqlite"
 
@@ -13,6 +15,8 @@ import (
 )
 
 type Server struct {
+	Config *config.Config
+
 	DB     *gorm.DB
 	Server *http.Server
 
@@ -20,25 +24,29 @@ type Server struct {
 }
 
 // Stronger object to better organize functionality
-func NewServer() *Server {
+func NewServer(c *config.Config) *Server {
+	// Create Config and Database
 	m := &Server{
-
-		DB: sqlite.NewDB(),
-
-		Server: &http.Server{
-			Addr: "localhost:5050",
-		},
+		Config: config.NewConfig(),
+		DB:     sqlite.NewDB(),
 	}
 
+	// Create the http.Server to serve requests
+	m.Server = &http.Server{
+		Addr: fmt.Sprintf("%s:%d", c.Host, c.Port),
+	}
+
+	// Load API services
 	m.ItemService = models.NewItemService(m.DB)
 
+	// Establish the routes
 	m.NewRouter()
 
 	return m
 }
 
+// Start function for server
 func (m *Server) Start() {
-	// API Server to host endpoints.
 	log.Printf("Starting API Server")
 
 	// Start with connecting to the Database
@@ -53,6 +61,7 @@ func (m *Server) Start() {
 	}()
 }
 
+// Stop function to allow graceful shutdown.
 func (m *Server) Stop(ctx context.Context) error {
 	// API Server to host endpoints.
 	log.Printf("Stopping API Server")
@@ -61,6 +70,7 @@ func (m *Server) Stop(ctx context.Context) error {
 
 }
 
+// Loads Router into http.Server
 func (m *Server) NewRouter() {
 	// Creates a chi.Router for the server
 	r := chi.NewRouter()
