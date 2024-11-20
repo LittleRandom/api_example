@@ -102,6 +102,7 @@ func (s *ItemService) HandleImportItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	w.Write(j)
 }
 

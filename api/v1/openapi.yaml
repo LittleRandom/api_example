@@ -5,8 +5,27 @@ info:
   version: 0.0.1
 
 servers:
+  # - url: http://localhost:5050/
   - url: https://api.plainrandom.com/
     description: Optional server description, e.g. Main (production) server
+
+components:
+  schemas:
+    item:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+    items:
+      type: array
+      additionalProperties:
+        $ref: "#/components/schemas/item"
+
 
 paths:
   /items:
@@ -22,3 +41,17 @@ paths:
                 type: array
                 items:
                   type: string
+    post:
+      summary: Creates an item
+      description: Sends a json object to the server and returns with a new entry with new UUID.
+      responses:
+        "201":
+          description: Status Created successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/item"
+
+
