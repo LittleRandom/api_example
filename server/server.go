@@ -5,14 +5,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"plainrandom/config"
 	"plainrandom/models"
 	"plainrandom/sqlite"
+	"strings"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"gorm.io/gorm"
 )
+
+const CLIENTPATH = "./static/"
 
 type Server struct {
 	Config *config.Config
@@ -77,7 +82,29 @@ func (m *Server) NewRouter() {
 
 	r.Use(middleware.Logger)
 
+	// Swagger API on root link
+	r.Route("/", RegisterFileServer("static"))
+
+	// OpenAPI file that holds API documentation
+	r.Route("/api/v1", RegisterFileServer("api/v1"))
+
+	// Items endpoint
 	r.Route("/items", m.ItemService.RegisterRoutes)
 
 	m.Server.Handler = r
+}
+
+// Register FileServer with path as argument
+func RegisterFileServer(path string) func(r chi.Router) {
+	// Returns a function that works with r.Route()
+	return func(r chi.Router) {
+		r.Get("/*", func(w http.ResponseWriter, r *http.Request) {
+			workDir, _ := os.Getwd()
+			filesDir := http.Dir(filepath.Join(workDir, path))
+			rctx := chi.RouteContext(r.Context())
+			pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")
+			fs := http.StripPrefix(pathPrefix, http.FileServer(filesDir))
+			fs.ServeHTTP(w, r)
+		})
+	}
 }
