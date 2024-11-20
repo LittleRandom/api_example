@@ -96,7 +96,7 @@ func (m *Server) NewRouter() {
 	r.Use(middleware.Logger)
 
 	// Swagger API on root link
-	r.Route("/", RegisterFileServer("static"))
+	r.Route("/", RegisterFileServer("api/static"))
 
 	// OpenAPI file that holds API documentation
 	r.Route("/api/v1", RegisterFileServer("api/v1"))
