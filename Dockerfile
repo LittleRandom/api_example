@@ -10,13 +10,13 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o /bin/api_app --tags=docker -a -ldflags 
 # Final image to host application
 FROM alpine
 
-COPY --from=build /bin/api_app /api_app
+COPY --from=build /bin/api_app /app
 # Create the base data and library directories.
 RUN mkdir /data
 
 
-EXPOSE 8090 5050
+EXPOSE 5050
 
 
 # Run
-CMD ["/nubayrah"]
+CMD ["/app"]
