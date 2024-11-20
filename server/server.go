@@ -77,7 +77,7 @@ func (m *Server) NewRouter() {
 
 	r.Use(middleware.Logger)
 
-	r.Route("/", m.ItemService.RegisterRoutes)
+	r.Route("/items", m.ItemService.RegisterRoutes)
 
 	m.Server.Handler = r
 }
