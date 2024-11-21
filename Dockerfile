@@ -13,7 +13,7 @@ FROM alpine
 COPY --from=build /bin/api_app /app
 
 # Copy static files to serve
-COPY api api
+COPY docs/api docs/api
 
 # Create the base data and library directories.
 RUN mkdir /data
