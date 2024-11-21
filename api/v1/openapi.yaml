@@ -19,16 +19,14 @@ components:
           format: uuid
         title:
           type: string
+          example: thing1
         description:
           type: string
-    items:
-      type: array
-      additionalProperties:
-        $ref: "#/components/schemas/item"
-
+          example: This this a thing 
 
 paths:
   /items:
+
     get:
       summary: Returns a list of items.
       description: Returns a list of all Items currently in the database.
@@ -40,18 +38,57 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: "#/components/schemas/item"
+
     post:
       summary: Creates an item
       description: Sends a json object to the server and returns with a new entry with new UUID.
+      parameters:
+        - name: item
+          in: body
+          required: true
+          description: body containing the following
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                example: thing1
+              description:
+                type: string
+                example: This this a thing
       responses:
         "201":
           description: Status Created successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/item"
+                $ref: "#/components/schemas/item"
+
+  /items/{id}:
+    get:
+      summary: Get specific item.
+      description: Retrieves information for a specific key. If not provided, then the result is root GET request.
+      parameters:
+        - name: itemKey
+          in: path
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Key of object to be retrieved.
+
+    delete:
+      summary: Deletes the item from database
+      description: Sends a key to delete from the database.
+      parameters:
+        - name: itemKey
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The object to be deleted.
+
 
 
