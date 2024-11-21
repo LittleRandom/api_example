@@ -44,6 +44,8 @@ func (s *ItemService) HandleGetRoot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	w.Write(j)
 }
 
@@ -68,6 +70,8 @@ func (s *ItemService) HandleGetItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	w.Write(j)
 }
 
@@ -102,6 +106,7 @@ func (s *ItemService) HandleImportItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	w.Write(j)
 }
