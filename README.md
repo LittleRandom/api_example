@@ -5,7 +5,7 @@ This repository was built by me to explore how to create an API using go. It use
 
 # Demo
 
-Try out the project ![demo](https://api.plainrandom.com/).
+Try out the project [demo](https://api.plainrandom.com/).
 
 # Features
 
@@ -53,6 +53,6 @@ docker compose up -d
 I'm currently self-hosting the application because I'm too cheap to rent a VPS. My networking stack involves:
 
 1. Reverse-proxy by Cloudflare CDN.
-2. ![Nginx Proxy Manager](https://nginxproxymanager.com/) to proxy it throughout my LAN.
+2. [Nginx Proxy Manager](https://nginxproxymanager.com/) to proxy it throughout my LAN.
 3. Debian LXC with Docker compose to host the application.
-4. Github actions-runner for ci/cd automation.
+4. Github actions-runner for CI/CD automation for build, publish, and deploy.
