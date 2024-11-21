@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Items API
-  description: This is an example API for learning purposes.
+  description: This is an barebones API written by plainrandom as a means to learn and to serve as a skeleton for future API projects.
   version: 0.0.1
 
 servers:
   # - url: http://localhost:5050/
   - url: https://api.plainrandom.com/
-    description: Optional server description, e.g. Main (production) server
+    description: Main demo server.
 
 components:
   schemas:
@@ -26,8 +26,9 @@ components:
 
 paths:
   /items:
-
     get:
+      tags: 
+        - Items Object
       summary: Returns a list of items.
       description: Returns a list of all Items currently in the database.
       responses:
@@ -41,22 +42,25 @@ paths:
                   $ref: "#/components/schemas/item"
 
     post:
+      tags: 
+        - Items Object
       summary: Creates an item
       description: Sends a json object to the server and returns with a new entry with new UUID.
+      consumes:
+        - application/json
       parameters:
         - name: item
           in: body
           required: true
           description: body containing the following
-          schema:
-            type: object
-            properties:
-              title:
-                type: string
-                example: thing1
-              description:
-                type: string
-                example: This this a thing
+          type: object
+          properties:
+            title:
+              type: string
+              example: thing1
+            description:
+              type: string
+              example: This this a thing
       responses:
         "201":
           description: Status Created successfully.
@@ -67,6 +71,8 @@ paths:
 
   /items/{id}:
     get:
+      tags: 
+          - Items Object
       summary: Get specific item.
       description: Retrieves information for a specific key. If not provided, then the result is root GET request.
       parameters:
@@ -79,6 +85,8 @@ paths:
           description: Key of object to be retrieved.
 
     delete:
+      tags: 
+        - Items Object
       summary: Deletes the item from database
       description: Sends a key to delete from the database.
       parameters:

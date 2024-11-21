@@ -18,8 +18,6 @@ import (
 	"gorm.io/gorm"
 )
 
-const CLIENTPATH = "./static/"
-
 type Server struct {
 	Config *config.Config
 
@@ -96,10 +94,10 @@ func (m *Server) NewRouter() {
 	r.Use(middleware.Logger)
 
 	// Swagger API on root link
-	r.Route("/", RegisterFileServer("api/static"))
+	r.Route("/", RegisterFileServer("docs/static"))
 
 	// OpenAPI file that holds API documentation
-	r.Route("/api/v1", RegisterFileServer("api/v1"))
+	r.Route("/api/v1", RegisterFileServer("docs/api/v1"))
 
 	// Items endpoint
 	r.Route("/items", m.ItemService.RegisterRoutes)
