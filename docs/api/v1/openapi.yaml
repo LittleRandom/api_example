@@ -11,7 +11,7 @@ servers:
 
 components:
   schemas:
-    item:
+    items_object:
       type: object
       properties:
         id:
@@ -39,7 +39,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/item'
+                  $ref: '#/components/schemas/items_object'
 
     post:
       tags: 
@@ -63,8 +63,7 @@ paths:
           content:
             application/json:
               schema:
-              type: object
-              $ref: '#/components/schemas/item'
+                $ref: '#/components/schemas/items_object'
 
   /items/{itemKey}:
     get:
@@ -86,7 +85,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/item'
+                $ref: '#/components/schemas/items_object'
         '404':
           description: Object not found
           content:
