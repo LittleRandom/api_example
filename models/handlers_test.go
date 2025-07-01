@@ -56,7 +56,8 @@ func MustOpenServer(t *testing.T) *server.Server {
 		DB: DB,
 
 		Server: &http.Server{
-			Addr: "localhost:5060",
+			Addr: "https://api.plainrandom.com",
+			// Addr: "localhost:5060",
 		},
 	}
 
@@ -160,8 +161,8 @@ func TestItemService_HandleImportItem(t *testing.T) {
 	s.ItemService.HandleImportItem(w, r)
 
 	// Check response status code
-	if w.Code != http.StatusOK {
-		t.Errorf("Expected status code %v, got %v", http.StatusOK, w.Code)
+	if w.Code != http.StatusCreated {
+		t.Errorf("Expected status code %v, got %v", http.StatusCreated, w.Code)
 	}
 
 	var response map[string]string

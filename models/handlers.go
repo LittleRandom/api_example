@@ -45,11 +45,12 @@ func (s *ItemService) HandleGetRoot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	w.Write(j)
 }
 
 func (s *ItemService) HandleGetItem(w http.ResponseWriter, r *http.Request) {
+	// Parses the `id` from the URL.
 	id := chi.URLParam(r, "id")
 	UUID, err := uuid.Parse(id)
 	if err != nil {
@@ -57,18 +58,23 @@ func (s *ItemService) HandleGetItem(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+
+	// Try to find the item inside of the database.
 	item, err := s.Repository.Read(UUID)
 	if err != nil {
 		log.Printf("error finding book in db: %v", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	// Convert database data to JSON for response.
 	j, err := json.Marshal(item)
 	if err != nil {
 		log.Printf("error marshalling books into json %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	// Add headers and write the response.
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -80,6 +86,7 @@ func (s *ItemService) HandleImportItem(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
 
+	// Decode the body from the request.
 	err := decoder.Decode(&item)
 	if err != nil {
 		log.Printf("Error with decoding json from body: %v", err)
@@ -87,18 +94,23 @@ func (s *ItemService) HandleImportItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Creates a new UUID for the object.
 	item.ID, err = uuid.NewUUID()
 	if err != nil {
 		log.Printf("Error when assigning new UUID in database: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	// Creates the item inside of database.
 	retItem, err := s.Repository.Create(&item)
 	if err != nil {
 		log.Printf("Error when creating item in database: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	// Marshal the data into json for return body
 	j, err := json.Marshal(retItem)
 	if err != nil {
 		log.Printf("Error response from database: %v", err)
@@ -106,8 +118,10 @@ func (s *ItemService) HandleImportItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Add headers and write the response.
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
+
 	w.Write(j)
 }
 
